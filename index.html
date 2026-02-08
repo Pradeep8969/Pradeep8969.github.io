@@ -10,6 +10,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Cinzel:wght@600&display=swap" rel="stylesheet">
 
 <style>
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* 🚫 prevent auto page scrolling */
+}
+
 body {
     font-family: 'Cormorant Garamond', serif;
     background: radial-gradient(circle at top, #7f1d1d, #450a0a);
@@ -17,7 +23,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
 }
 
 /* Floating roses */
@@ -26,7 +31,6 @@ body {
     top: -10vh;
     animation: fall linear infinite;
     pointer-events: none;
-    opacity: .9;
 }
 @keyframes fall {
     to { transform: translateY(120vh) rotate(360deg); }
@@ -53,6 +57,8 @@ body {
     transition: transform 1s ease;
     z-index: 3;
 }
+
+/* 📜 LETTER */
 .letter {
     position: absolute;
     bottom: -100%;
@@ -60,17 +66,20 @@ body {
     right: 12px;
     background: #fff;
     border-radius: 12px;
-    padding: 26px;
+    padding: 24px;
     text-align: center;
     transition: bottom 1.3s ease;
     box-shadow: inset 0 0 20px rgba(0,0,0,.08);
+
+    max-height: 150px;       /* ✅ scroll area */
+    overflow-y: auto;        /* ✅ manual scroll only */
+    scroll-behavior: auto;   /* 🚫 no auto-scroll */
 }
 
-/* Active */
 .envelope.open .flap { transform: rotateX(180deg); }
 .envelope.open .letter { bottom: 10px; }
 
-/* Text reveal */
+/* Text animation */
 .fade {
     opacity: 0;
     transform: translateY(20px);
@@ -84,14 +93,14 @@ body {
 
 <body>
 
-<!-- 🎵 BACKGROUND MUSIC (AUTOPLAY MUTED) -->
+<!-- 🎵 BACKGROUND MUSIC (YOU ONLY ADD THE FILE) -->
 <audio id="bgMusic" autoplay muted loop>
-    <source src="music/proposal.mp3" type="audio/mpeg">
+    <source src="music/love.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Floating roses -->
+<!-- Roses -->
 <script>
-for(let i=0;i<45;i++){
+for(let i=0;i<40;i++){
     const r=document.createElement('div');
     r.className='rose';
     r.textContent='🌹';
@@ -136,14 +145,14 @@ for(let i=0;i<45;i++){
 
                 <p class="text-lg text-red-800 leading-relaxed fade"
                    style="animation-delay:.6s;">
-                    Every heartbeat of mine whispers your name.<br>
+                    Every heartbeat of mine whispers your name.
                     Loving you feels like destiny choosing me.
                 </p>
 
                 <p class="mt-4 text-lg text-red-800 fade"
                    style="animation-delay:.9s;">
-                    I don’t promise perfection,<br>
-                    but I promise <b>forever</b>.
+                    I don’t promise perfection,
+                    but I promise forever.
                 </p>
 
                 <p class="mt-6 text-2xl font-semibold text-red-900 fade"
@@ -157,28 +166,25 @@ for(let i=0;i<45;i++){
 
 <script>
 const SECRET = "subina";
-let musicUnlocked = false;
+let unlocked = false;
+
+function unlockMusic(){
+    if(unlocked) return;
+    const m = document.getElementById("bgMusic");
+    m.muted = false;
+    m.volume = 0;
+    m.play().catch(()=>{});
+    let v = 0;
+    const fade = setInterval(()=>{
+        if(v < 0.4){ v += 0.02; m.volume = v; }
+        else clearInterval(fade);
+    },150);
+    unlocked = true;
+}
 
 function vibrateLove(){
     if(navigator.vibrate){
         navigator.vibrate([200,100,200,100,300]);
-    }
-}
-
-function unlockMusic(){
-    const music = document.getElementById("bgMusic");
-    if(!musicUnlocked){
-        music.muted = false;
-        music.volume = 0;
-        music.play().catch(()=>{});
-        let v = 0;
-        const fade = setInterval(()=>{
-            if(v < 0.4){
-                v += 0.02;
-                music.volume = v;
-            } else clearInterval(fade);
-        }, 150);
-        musicUnlocked = true;
     }
 }
 
@@ -192,13 +198,9 @@ function openEnvelope(){
         env.classList.remove("hidden");
         setTimeout(()=>env.classList.add("open"),200);
     } else {
-        alert("This letter belongs to only one heart 💔");
+        alert("This letter is meant for only one heart 💔");
     }
 }
-
-// unlock music on any interaction (mobile safe)
-document.addEventListener("click", unlockMusic, { once:true });
-document.addEventListener("touchstart", unlockMusic, { once:true });
 </script>
 
 </body>
