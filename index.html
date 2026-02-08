@@ -6,14 +6,13 @@
 <title>Propose Day 💍</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Cinzel:wght@600&display=swap" rel="stylesheet">
 
 <style>
 html, body {
     margin: 0;
     padding: 0;
-    overflow: hidden; /* 🚫 prevent auto page scrolling */
+    overflow: hidden; 
 }
 
 body {
@@ -25,7 +24,6 @@ body {
     align-items: center;
 }
 
-/* Floating roses */
 .rose {
     position: fixed;
     top: -10vh;
@@ -36,7 +34,6 @@ body {
     to { transform: translateY(120vh) rotate(360deg); }
 }
 
-/* Envelope */
 .envelope {
     width: 320px;
     height: 200px;
@@ -58,7 +55,6 @@ body {
     z-index: 3;
 }
 
-/* 📜 LETTER */
 .letter {
     position: absolute;
     bottom: -100%;
@@ -70,16 +66,13 @@ body {
     text-align: center;
     transition: bottom 1.3s ease;
     box-shadow: inset 0 0 20px rgba(0,0,0,.08);
-
-    max-height: 150px;       /* ✅ scroll area */
-    overflow-y: auto;        /* ✅ manual scroll only */
-    scroll-behavior: auto;   /* 🚫 no auto-scroll */
+    max-height: 150px;       
+    overflow-y: auto;        
 }
 
 .envelope.open .flap { transform: rotateX(180deg); }
 .envelope.open .letter { bottom: 10px; }
 
-/* Text animation */
 .fade {
     opacity: 0;
     transform: translateY(20px);
@@ -93,13 +86,14 @@ body {
 
 <body>
 
-<!-- 🎵 BACKGROUND MUSIC (YOU ONLY ADD THE FILE) -->
-<audio id="bgMusic" autoplay muted loop>
-    <source src="music/love.mp3" type="audio/mpeg">
+<!-- 🎵 UPDATED AUDIO TAG -->
+<!-- Using a public URL for testing. Replace with your 'music/love.mp3' when ready -->
+<audio id="bgMusic" loop preload="auto">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
 </audio>
 
-<!-- Roses -->
 <script>
+// Roses Background
 for(let i=0;i<40;i++){
     const r=document.createElement('div');
     r.className='rose';
@@ -113,24 +107,22 @@ for(let i=0;i<40;i++){
 
 <div class="bg-white/90 backdrop-blur-xl rounded-3xl p-10 max-w-md w-full shadow-2xl text-center z-10">
 
-    <h1 class="text-5xl font-black text-red-900 mb-2"
-        style="font-family:'Playfair Display',serif;">
+    <h1 class="text-5xl font-black text-red-900 mb-2" style="font-family:'Playfair Display',serif;">
         Propose Day
     </h1>
 
-    <p class="uppercase tracking-widest text-sm mb-6 text-red-700"
-       style="font-family:'Cinzel',serif;">
+    <p class="uppercase tracking-widest text-sm mb-6 text-red-700" style="font-family:'Cinzel',serif;">
         February 8
     </p>
 
     <input id="nameInput"
-        placeholder="Type the secret name..."
+        placeholder="Type 'subina'..."
         class="w-full py-4 px-6 rounded-2xl text-center border-2 border-red-300 focus:outline-none focus:border-red-600 text-lg mb-6"/>
 
     <button onclick="openEnvelope()"
         class="w-full py-4 rounded-2xl bg-gradient-to-r from-red-700 to-red-900
                text-white tracking-widest uppercase font-semibold
-               hover:scale-105 transition">
+               hover:scale-105 transition active:scale-95">
         Open My Heart
     </button>
 
@@ -138,25 +130,17 @@ for(let i=0;i<40;i++){
         <div id="envelope" class="envelope hidden">
             <div class="flap"></div>
             <div class="letter">
-                <h2 class="text-3xl font-bold text-red-900 mb-4 fade"
-                    style="animation-delay:.3s;">
+                <h2 class="text-3xl font-bold text-red-900 mb-4 fade" style="animation-delay:.3s;">
                     Subina 💖
                 </h2>
-
-                <p class="text-lg text-red-800 leading-relaxed fade"
-                   style="animation-delay:.6s;">
+                <p class="text-lg text-red-800 leading-relaxed fade" style="animation-delay:.6s;">
                     Every heartbeat of mine whispers your name.
                     Loving you feels like destiny choosing me.
                 </p>
-
-                <p class="mt-4 text-lg text-red-800 fade"
-                   style="animation-delay:.9s;">
-                    I don’t promise perfection,
-                    but I promise forever.
+                <p class="mt-4 text-lg text-red-800 fade" style="animation-delay:.9s;">
+                    I don’t promise perfection, but I promise forever.
                 </p>
-
-                <p class="mt-6 text-2xl font-semibold text-red-900 fade"
-                   style="animation-delay:1.2s;">
+                <p class="mt-6 text-2xl font-semibold text-red-900 fade" style="animation-delay:1.2s;">
                     Will you be mine? 💍
                 </p>
             </div>
@@ -166,37 +150,26 @@ for(let i=0;i<40;i++){
 
 <script>
 const SECRET = "subina";
-let unlocked = false;
-
-function unlockMusic(){
-    if(unlocked) return;
-    const m = document.getElementById("bgMusic");
-    m.muted = false;
-    m.volume = 0;
-    m.play().catch(()=>{});
-    let v = 0;
-    const fade = setInterval(()=>{
-        if(v < 0.4){ v += 0.02; m.volume = v; }
-        else clearInterval(fade);
-    },150);
-    unlocked = true;
-}
-
-function vibrateLove(){
-    if(navigator.vibrate){
-        navigator.vibrate([200,100,200,100,300]);
-    }
-}
+let musicStarted = false;
 
 function openEnvelope(){
-    unlockMusic();
-    vibrateLove();
-
     const val = document.getElementById("nameInput").value.trim().toLowerCase();
+    
     if(val === SECRET){
+        // 1. Play Music
+        const music = document.getElementById("bgMusic");
+        if(!musicStarted) {
+            music.play().catch(e => console.log("Music play blocked:", e));
+            musicStarted = true;
+        }
+
+        // 2. Vibrate
+        if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
+
+        // 3. Show Envelope
         const env = document.getElementById("envelope");
         env.classList.remove("hidden");
-        setTimeout(()=>env.classList.add("open"),200);
+        setTimeout(() => env.classList.add("open"), 200);
     } else {
         alert("This letter is meant for only one heart 💔");
     }
