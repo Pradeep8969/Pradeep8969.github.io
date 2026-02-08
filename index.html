@@ -9,14 +9,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Cinzel:wght@600&display=swap" rel="stylesheet">
 
 <style>
-    /* Prevent scrolling initially */
-    html, body {
+    body, html {
         margin: 0;
         padding: 0;
-        overflow-x: hidden;
-        overflow-y: hidden; /* Locked until name is entered */
         background: radial-gradient(circle at top, #7f1d1d, #450a0a);
-        min-height: 100vh;
+        /* Scroll is disabled until name is typed */
+        overflow: hidden; 
+        height: 100%;
     }
 
     /* Floating roses */
@@ -25,222 +24,190 @@
         top: -10vh;
         animation: fall linear infinite;
         pointer-events: none;
-        z-index: 50;
+        z-index: 10;
+        transition: opacity 1s ease;
     }
     @keyframes fall {
-        to { transform: translateY(120vh) rotate(360deg); }
+        to { transform: translateY(110vh) rotate(360deg); }
     }
 
-    /* Envelope Container */
+    /* Envelope styling */
     .envelope-wrapper {
-        position: relative;
-        width: 350px;
-        height: 250px;
-        margin-top: 50px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 320px;
+        height: 200px;
+        z-index: 20;
     }
 
     .envelope {
         position: relative;
         width: 100%;
         height: 100%;
-        background: #fecaca; /* Light pink/red */
-        border-radius: 0 0 15px 15px;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        z-index: 20;
-    }
-
-    /* The Front flap of the envelope */
-    .envelope::before {
-        content: "";
-        position: absolute;
+        background: #fecaca;
+        border-radius: 0 0 10px 10px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         z-index: 30;
-        border-left: 175px solid transparent;
-        border-right: 175px solid transparent;
-        border-bottom: 125px solid #fda4af; /* lighter pink */
-        bottom: 0;
-        left: 0;
     }
 
-    /* The Opening Flap */
+    /* The flap */
     .flap {
         position: absolute;
         top: 0;
         left: 0;
         width: 0;
         height: 0;
-        border-left: 175px solid transparent;
-        border-right: 175px solid transparent;
-        border-top: 130px solid #f87171; /* Darker red flap */
+        border-left: 160px solid transparent;
+        border-right: 160px solid transparent;
+        border-top: 100px solid #f87171;
         transform-origin: top;
-        transition: transform 1s ease;
-        z-index: 40;
+        transition: transform 0.8s ease;
+        z-index: 50;
     }
 
     .open .flap {
         transform: rotateX(180deg);
-        z-index: 10; /* Move behind when opened */
+        z-index: 10;
     }
 
-    /* 📜 THE LETTER */
+    /* The Letter */
     .letter {
         position: absolute;
-        top: 10px;
-        left: 15px;
-        width: 320px;
-        background: #fff;
+        top: 5px;
+        left: 10px;
+        width: 300px;
+        background: white;
         padding: 40px 20px;
-        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        text-align: center;
         z-index: 25;
-        transition: transform 0.1s linear; /* Smooth scroll transition */
-        min-height: 600px; /* Long paper */
-        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        /* The letter will move via JS scroll */
+        transform: translateY(0px);
+        min-height: 800px;
     }
 
-    #scroll-instruction {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        color: white;
-        font-family: 'Cinzel', serif;
-        animation: bounce 2s infinite;
-        display: none;
-    }
-
-    @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% {transform: translateY(0) translateX(-50%);}
-        40% {transform: translateY(-10px) translateX(-50%);}
-        60% {transform: translateY(-5px) translateX(-50%);}
+    /* UI text hide transition */
+    #main-ui {
+        transition: all 1s ease;
     }
 </style>
 </head>
 
 <body>
 
-<audio id="bgMusic" loop>
-    <source src="music/love.mp3" type="audio/mpeg">
-    <!-- Fallback if local file fails -->
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+<!-- Update the src to your music/love.mp3 -->
+<audio id="bgMusic" loop preload="auto">
+    <source src="love.mp3" type="audio/mpeg">
+    <source src="love.mp3" type="audio/mpeg">
 </audio>
 
-<div id="main-ui" class="fixed inset-0 flex flex-col items-center justify-center z-50 transition-opacity duration-1000">
-    <div class="bg-white/90 backdrop-blur-xl rounded-3xl p-10 max-w-md w-full shadow-2xl text-center">
-        <div id="header-text">
-            <h1 class="text-5xl font-black text-red-900 mb-2" style="font-family:'Playfair Display',serif;">
-                Propose Day
-            </h1>
-            <p class="uppercase tracking-widest text-sm mb-6 text-red-700" style="font-family:'Cinzel',serif;">
-                February 8
-            </p>
-        </div>
+<div id="main-ui" class="fixed inset-0 flex flex-col items-center justify-center z-50 p-6">
+    <div class="bg-white/95 backdrop-blur-xl rounded-3xl p-10 max-w-sm w-full shadow-2xl text-center">
+        <h1 class="text-5xl font-black text-red-900 mb-2" style="font-family:'Playfair Display';">
+            Propose Day
+        </h1>
+        <p class="uppercase tracking-widest text-xs mb-6 text-red-700" style="font-family:'Cinzel';">
+            February 8
+        </p>
 
-        <input id="nameInput" placeholder="Type the secret name..." 
-            class="w-full py-4 px-6 rounded-2xl text-center border-2 border-red-300 focus:outline-none focus:border-red-600 text-lg mb-6"/>
+        <input id="nameInput" placeholder="Enter name..." 
+            class="w-full py-3 px-4 rounded-xl text-center border-2 border-red-200 focus:border-red-600 outline-none mb-4 text-lg"/>
 
-        <button onclick="checkName()"
-            class="w-full py-4 rounded-2xl bg-gradient-to-r from-red-700 to-red-900 text-white tracking-widest uppercase font-semibold hover:scale-105 transition">
-            Open My Heart
+        <button onclick="unlock()" 
+            class="w-full py-4 rounded-xl bg-red-800 text-white font-bold tracking-widest hover:bg-red-700 transition active:scale-95">
+            OPEN
         </button>
     </div>
 </div>
 
-<!-- This area appears only when subina is typed -->
-<div id="proposal-section" class="hidden opacity-0 transition-opacity duration-1000 flex flex-col items-center pt-20">
-    <div id="envelope-container" class="envelope-wrapper">
-        <div class="flap" id="flap"></div>
+<div id="scroll-container" class="hidden">
+    <!-- This div creates the scroll length -->
+    <div style="height: 300vh;"></div> 
+
+    <div id="env-wrapper" class="envelope-wrapper">
+        <div id="flap" class="flap"></div>
         <div class="envelope"></div>
         
-        <div class="letter" id="scrollLetter">
-            <h2 class="text-4xl font-bold text-red-900 mb-8 text-center" style="font-family:'Playfair Display';">Subina 💖</h2>
-            
-            <div class="space-y-12 text-xl text-red-800 leading-relaxed font-serif">
-                <p>Every heartbeat of mine whispers your name. Loving you feels like destiny choosing me.</p>
-                <p>From the moment we met, everything changed. I found a home in your smile.</p>
-                <p>I don’t promise perfection, but I promise forever. I promise to hold your hand through every storm.</p>
-                <p>You are my today and all of my tomorrows.</p>
-                
-                <div class="pt-20 text-center">
-                    <p class="text-3xl font-bold text-red-900">Will you be mine? 💍</p>
-                    <p class="mt-32 italic text-sm text-red-400 text-center">(End of my letter... but not my love)</p>
-                </div>
+        <div id="letter" class="letter">
+            <h2 class="text-3xl font-bold text-red-900 mb-10">Dearest Subina,</h2>
+            <div class="space-y-20 text-lg text-red-800 italic font-serif">
+                <p>Every heartbeat of mine whispers your name...</p>
+                <p>Since the day we met, my world has been brighter.</p>
+                <p>I may not be perfect, but my love for you is.</p>
+                <p>I want to walk every path of life holding your hand.</p>
+                <p class="text-3xl font-bold not-italic pt-20 text-red-900">Will you be mine? 💍</p>
+                <div class="h-40"></div>
+                <p class="text-sm opacity-50 font-sans">End of letter. Forever begins here.</p>
             </div>
         </div>
     </div>
-    
-    <!-- This creates extra space to allow scrolling -->
-    <div style="height: 1200px;"></div>
 </div>
 
-<div id="scroll-instruction">Scroll down to read... ↓</div>
-
 <script>
-// Create roses
-for(let i=0;i<40;i++){
-    const r=document.createElement('div');
-    r.className='rose';
-    r.textContent='🌹';
-    r.style.left=Math.random()*100+'vw';
-    r.style.fontSize=22+Math.random()*35+'px';
-    r.style.animationDuration=8+Math.random()*12+'s';
+// Generate Roses
+const roseContainer = [];
+for(let i=0; i<30; i++){
+    const r = document.createElement('div');
+    r.className = 'rose';
+    r.textContent = '🌹';
+    r.style.left = Math.random() * 100 + 'vw';
+    r.style.fontSize = Math.random() * 20 + 20 + 'px';
+    r.style.animationDuration = Math.random() * 5 + 5 + 's';
     document.body.appendChild(r);
+    roseContainer.push(r);
 }
 
-const SECRET = "subina";
+function unlock() {
+    const input = document.getElementById('nameInput').value.trim().toLowerCase();
+    const music = document.getElementById('bgMusic');
 
-function checkName() {
-    const val = document.getElementById("nameInput").value.trim().toLowerCase();
-    
-    if(val === SECRET) {
-        unlockPage();
-    } else {
-        alert("This letter is meant for only one heart 💔");
-    }
-}
+    if(input === "subina") {
+        // 1. Play Music Immediately
+        music.play().catch(e => console.log("Audio Error:", e));
 
-function unlockPage() {
-    // 1. Play Music
-    const music = document.getElementById("bgMusic");
-    music.play().catch(() => {});
+        // 2. Clear Roses Immediately
+        roseContainer.forEach(r => {
+            r.style.opacity = '0';
+            setTimeout(() => r.remove(), 1000);
+        });
 
-    // 2. Hide Header and Propose Day Text
-    document.getElementById("main-ui").classList.add("opacity-0");
-    setTimeout(() => {
-        document.getElementById("main-ui").style.display = "none";
-        
-        // 3. Show Envelope Section
-        const proposal = document.getElementById("proposal-section");
-        proposal.classList.remove("hidden");
+        // 3. Hide UI
+        document.getElementById('main-ui').style.opacity = '0';
         setTimeout(() => {
-            proposal.classList.add("opacity-0");
-            proposal.style.opacity = "1";
-            document.getElementById("scroll-instruction").style.display = "block";
-        }, 100);
-
-        // 4. Open the flap
-        setTimeout(() => {
-            document.getElementById("envelope-container").classList.add("open");
-            // Enable scrolling now
-            document.body.style.overflowY = "auto";
+            document.getElementById('main-ui').classList.add('hidden');
+            
+            // 4. Show Letter Container
+            document.getElementById('scroll-container').classList.remove('hidden');
+            
+            // 5. Open Flap
+            setTimeout(() => {
+                document.getElementById('flap').parentElement.classList.add('open');
+                // Enable Scrolling
+                document.body.style.overflowY = "auto";
+                document.documentElement.style.overflowY = "auto";
+            }, 600);
         }, 1000);
-    }, 1000);
+
+    } else {
+        alert("This is a private letter 🔒");
+    }
 }
 
-// 5. Scroll Interaction
-window.onscroll = function() {
-    const letter = document.getElementById("scrollLetter");
-    const scrollPos = window.scrollY;
+// 6. Scroll Logic
+window.addEventListener('scroll', () => {
+    const letter = document.getElementById('letter');
+    const scrollVal = window.scrollY;
     
-    // Move the letter up as we scroll
-    // The multiplier (1.2) controls how fast it comes out
-    if (scrollPos > 0) {
-        letter.style.transform = `translateY(-${scrollPos * 0.8}px)`;
-        
-        // Hide instruction once user starts scrolling
-        if(scrollPos > 50) {
-            document.getElementById("scroll-instruction").style.opacity = "0";
-        }
+    // As you scroll down, move the letter UP (- value)
+    if(scrollVal > 0) {
+        // 0.8 controls the speed. Higher = faster slide out
+        letter.style.transform = `translateY(-${scrollVal * 0.8}px)`;
+    } else {
+        letter.style.transform = `translateY(0px)`;
     }
-};
+});
 </script>
 
 </body>
