@@ -42,30 +42,13 @@ body {
   0%,100% { transform: scale(1); }
   50% { transform: scale(1.08); }
 }
-
-/* Typing effect */
-@keyframes typing {
-  from { width: 0; }
-  to { width: 100%; }
-}
-@keyframes blink {
-  50% { border-color: transparent; }
-}
-.typing-text {
-  display: inline-block;
-  overflow: hidden;
-  border-right: 2px solid #ffb6b9;
-  white-space: nowrap;
-  width: 0;
-  animation: typing 4s steps(50, end) forwards, blink 0.75s step-end infinite;
-}
 </style>
 </head>
 
 <body class="flex items-center justify-center min-h-screen text-white">
 
 <!-- Background Music -->
-<audio id="bgMusic" src="love.mp3" autoplay loop muted></audio>
+<audio id="bgMusic" src="lovei.mp3" autoplay loop muted></audio>
 
 <!-- Floating Chocolates -->
 <div id="chocoWrap"></div>
@@ -74,10 +57,9 @@ body {
 <div class="relative z-10 bg-black/40 backdrop-blur-xl rounded-2xl p-8 text-center max-w-md shadow-2xl">
   <h1 class="text-4xl font-semibold mb-3">Happy Chocolate Day 🍫</h1>
 
+  <!-- Typing message -->
   <p class="text-lg text-pink-200 mb-6">
-    <span class="typing-text" id="typingMessage">
-      Hey bae, just like chocolate, you make my life sweeter, warmer, and happier. Happy Chocolate Day to my sweetest girl🍫❤️
-    </span>
+    <span id="typingMessage"></span>
   </p>
 
   <div class="text-6xl heartbeat mb-4">🍫❤️</div>
@@ -88,12 +70,12 @@ body {
   </button>
 
   <p id="extraMessage" class="mt-6 text-pink-300 hidden text-sm">
-    Kanxo, you’re my favorite kind of sweetness 🍫💖
+    Kanxi, you’re my favorite kind of sweetness 🍫💖
   </p>
 </div>
 
 <script>
-/* Floating chocolates */
+// Floating chocolates
 for (let i = 0; i < 25; i++) {
   const c = document.createElement('div');
   c.className = 'choco';
@@ -103,17 +85,30 @@ for (let i = 0; i < 25; i++) {
   document.getElementById('chocoWrap').appendChild(c);
 }
 
-/* Start interaction */
+// Typing animation
+const message = "Hey there, just like chocolate, you make my life sweeter, warmer, and happier. Happy Chocolate Day to my sweetest girl 🍫❤️";
+const typingElement = document.getElementById("typingMessage");
+let index = 0;
+
+function typeMessage() {
+  if (index < message.length) {
+    typingElement.innerHTML += message.charAt(index);
+    index++;
+    setTimeout(typeMessage, 50); // 50ms per character
+  }
+}
+
+// Start typing immediately
+window.addEventListener('load', typeMessage);
+
+// Start love interaction
 function startLove() {
-  // Reveal extra message
   document.getElementById('extraMessage').classList.remove('hidden');
 
-  // Unmute music (mobile friendly)
   const music = document.getElementById('bgMusic');
   music.muted = false;
   music.play();
 
-  // Vibration (mobile supported)
   if (navigator.vibrate) {
     navigator.vibrate([200, 100, 200]);
   }
@@ -122,5 +117,3 @@ function startLove() {
 
 </body>
 </html>
-
-
