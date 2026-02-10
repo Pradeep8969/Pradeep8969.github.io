@@ -47,7 +47,6 @@ body {
   border-radius: 16px;
   padding: 14px;
   max-width: 260px;
-  margin: auto;
 }
 </style>
 </head>
@@ -55,7 +54,7 @@ body {
 <body class="flex items-center justify-center min-h-screen">
 
 <!-- Music -->
-<audio id="bgMusic" src="lovei.mp3" autoplay loop muted></audio>
+<audio id="bgMusic" src="lovii.mp3" autoplay loop muted></audio>
 
 <!-- Floating background -->
 <div id="floatWrap"></div>
@@ -66,13 +65,15 @@ body {
   <h1 class="text-3xl font-semibold mb-4">Happy Teddy Day 🧸</h1>
 
   <!-- Teddy holding message -->
-  <div class="relative heartbeat">
-    <img src="teddy.png" alt="Teddy" class="w-64 mx-auto">
+  <div class="relative heartbeat flex justify-center">
 
-    <!-- Message on teddy -->
-    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 message-card text-sm text-pink-100">
+    <!-- Message (behind teddy, looks held) -->
+    <div class="absolute bottom-16 left-1/2 -translate-x-1/2 message-card text-sm text-pink-100 z-10 pointer-events-none">
       <span id="typingMessage"></span>
     </div>
+
+    <!-- Teddy on top -->
+    <img src="teddy.png" alt="Teddy" class="w-64 mx-auto relative z-20">
   </div>
 
   <button onclick="startLove()" 
@@ -81,12 +82,12 @@ body {
   </button>
 
   <p id="extraMessage" class="mt-4 text-pink-300 hidden text-sm">
-    Hey, even if i cant be there to hug you this panda carries all my hugs for you 🧸💞
+    Hey, even if I can’t be there to hug you, this panda carries all my hugs for you 🧸💞
   </p>
 </div>
 
 <script>
-// Floating emojis
+// Floating teddies
 for (let i = 0; i < 20; i++) {
   const t = document.createElement('div');
   t.className = 'teddy-float';
