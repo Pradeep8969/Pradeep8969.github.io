@@ -3,74 +3,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Promise Day 💍</title>
+<title>Happy Hug Day 🤗</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
 
 <style>
 body{
   font-family: 'Playfair Display', serif;
-  background: linear-gradient(to bottom, #1e0033, #3a0066, #ff66a3);
-  overflow-x: hidden;
+  background: linear-gradient(to bottom, #ff9a9e, #fad0c4);
 }
 
-/* floating hearts */
-.heart{
-  position:absolute;
-  font-size:20px;
-  animation: float 10s linear infinite;
-  opacity:0.6;
-}
-@keyframes float{
-  from{transform:translateY(110vh);}
-  to{transform:translateY(-10vh);}
-}
-
-/* fade in animation */
+/* Fade animation */
 .fade{
   opacity:0;
-  transform: translateY(20px);
-  transition: all 1s ease;
+  transform:translateY(20px);
+  transition:all 1s ease;
 }
 .fade.show{
   opacity:1;
-  transform: translateY(0);
+  transform:translateY(0);
 }
 </style>
 </head>
 
-<body class="flex items-center justify-center min-h-screen text-white p-4">
+<body class="min-h-screen flex items-center justify-center p-4">
 
 <!-- Background Music -->
-<audio id="bgMusic" src="loveiii.mp3" autoplay loop muted playsinline></audio>
+<audio id="bgMusic" src="lovei.mp3" autoplay loop muted playsinline></audio>
 
-<!-- Floating Hearts -->
-<div id="hearts"></div>
+<div class="bg-white/70 backdrop-blur-md rounded-3xl shadow-xl max-w-md w-full p-6 text-center">
 
-<div class="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl max-w-md w-full p-6 text-center">
+  <h1 class="text-3xl text-pink-600 mb-4">Happy Hug Day 🤗</h1>
 
-  <h1 class="text-3xl font-bold mb-4 text-pink-200">Happy Promise Day 💍</h1>
-
-  <p class="text-lg mb-6">
-    For my <span class="text-pink-300 font-bold">For my cute girl</span> ❤️
+  <p class="text-lg text-gray-700 mb-6">
+    For my <span class="text-pink-600 font-semibold">Subina cute gf</span> ❤️
   </p>
 
-  <button onclick="revealPromises()" 
-    class="px-6 py-3 bg-pink-600 hover:bg-pink-700 rounded-full transition duration-300">
-    Reveal My Promises 💖
+  <!-- Photo Section -->
+  <div class="grid grid-cols-2 gap-3 mb-6">
+    <!-- Replace photo1.jpg etc with your real images -->
+    <img src="photo1.jpg" class="rounded-xl shadow-md hover:scale-105 transition duration-300">
+    <img src="photo2.jpg" class="rounded-xl shadow-md hover:scale-105 transition duration-300">
+    <img src="photo3.jpg" class="rounded-xl shadow-md hover:scale-105 transition duration-300">
+    <img src="photo4.jpg" class="rounded-xl shadow-md hover:scale-105 transition duration-300">
+  </div>
+
+  <button onclick="showMessage()" 
+    class="px-6 py-3 bg-pink-500 hover:bg-pink-600 text-white rounded-full transition duration-300">
+    Open My Hug 🤍
   </button>
 
-  <!-- Promises -->
-  <div id="promiseBox" class="mt-6 space-y-4 text-pink-100 text-sm hidden">
+  <!-- Message -->
+  <div id="messageBox" class="mt-6 space-y-3 text-gray-700 hidden">
 
     <p class="fade">Things have led us to where we are right now.</p>
-    <p class="fade">If only I could have lived up to my promises, all of this would have never happened.</p>
     <p class="fade">Even though time has been rough with us.</p>
-    <p class="fade">On this special day, I want to promise you that</p>
-    <p class="fade">I will choose you, every single day, love you every single day.</p>
-    <p class="fade">I will love you with honesty and loyalty.</p>
-    <p class="fade font-semibold text-pink-300">Forever means you & me. 💍❤️</p>
+    <p class="fade">Today, I just wish I could hold you close.</p>
+    <p class="fade">Not to fix everything instantly,</p>
+    <p class="fade">but to remind you that I am still here.</p>
+    <p class="fade">And in that hug, you would feel how much you mean to me.</p>
 
   </div>
 
@@ -78,40 +70,28 @@ body{
 
 <script>
 
-/* Floating Hearts */
-for(let i=0;i<25;i++){
-  const heart=document.createElement("div");
-  heart.className="heart";
-  heart.innerText="💖";
-  heart.style.left=Math.random()*100+"vw";
-  heart.style.animationDuration=(6+Math.random()*6)+"s";
-  document.getElementById("hearts").appendChild(heart);
-}
-
-/* Reveal Promises */
-function revealPromises(){
-  const box=document.getElementById("promiseBox");
+/* Reveal Message */
+function showMessage(){
+  const box=document.getElementById("messageBox");
   box.classList.remove("hidden");
 
   const fades=document.querySelectorAll(".fade");
   fades.forEach((el,index)=>{
     setTimeout(()=>{
       el.classList.add("show");
-    },index*600);
+    },index*700);
   });
 
-  // play music
   const music=document.getElementById("bgMusic");
   music.muted=false;
   music.play();
 
-  // vibration (mobile)
   if(navigator.vibrate){
     navigator.vibrate([200,100,200]);
   }
 }
 
-/* Allow autoplay workaround */
+/* Autoplay workaround */
 document.addEventListener("click",()=>{
   const music=document.getElementById("bgMusic");
   music.muted=false;
@@ -122,6 +102,3 @@ document.addEventListener("click",()=>{
 
 </body>
 </html>
-
-
-
